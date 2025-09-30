@@ -1,33 +1,30 @@
-👥 User Roles
+## 👥 User Roles
+
 Users are assigned one of the following roles:
 
-🟦 Group 1
-MODERATEUR
+### Group 1
+- `MODERATEUR`
+- `SOURCING`
+- `COMMERCE`
+- `ADV`
 
-SOURCING
+### Group 2
+- `CLIENT`
+- `CANDIDAT`
+- `AMBASSADEUR`
+- `SOURCING_COMMERCE`
+- `AUTRE`
 
-COMMERCE
+### Special Role
+- `ADMIN`
 
-ADV
+---
 
-🟩 Group 2
-CLIENT
+## 🔐 Chat Permission Rules
 
-CANDIDAT
+The method `canChat(String roleA, String roleB)` defines the logic:
 
-AMBASSADEUR
-
-SOURCING_COMMERCE
-
-AUTRE
-
-🔴 Special Role
-ADMIN
-
-🔐 Chat Permission Rules
-The method canChat(String roleA, String roleB) defines the logic:
-
-java
+```java
 private boolean canChat(String roleA, String roleB) {
     List<String> group1 = List.of("MODERATEUR", "SOURCING", "COMMERCE", "ADV");
     List<String> group2 = List.of("CLIENT", "CANDIDAT", "AMBASSADEUR", "SOURCING_COMMERCE", "AUTRE");
@@ -46,11 +43,17 @@ private boolean canChat(String roleA, String roleB) {
     // All other combinations are not allowed
     return false;
 }
-✅ Examples
-Sender Role	Receiver Role	Allowed
-ADMIN	SOURCING	✅ Yes
-MODERATEUR	CLIENT	✅ Yes
-CLIENT	CANDIDAT	✅ Yes
-CANDIDAT	ADMIN	❌ No
-ADV	AMBASSADEUR	✅ Yes
-AUTRE	MODERATEUR	✅ Yes
+
+
+
+
+## ✅ Chat Permission Matrix
+
+| Sender Role | Receiver Role | Allowed |
+|-------------|----------------|---------|
+| `ADMIN`     | `SOURCING`     | ✅ Yes  |
+| `MODERATEUR`| `CLIENT`       | ✅ Yes  |
+| `CLIENT`    | `CANDIDAT`     | ✅ Yes  |
+| `CANDIDAT`  | `ADMIN`        | ❌ No   |
+| `ADV`       | `AMBASSADEUR`  | ✅ Yes  |
+| `AUTRE`     | `MODERATEUR`   | ✅ Yes  |
