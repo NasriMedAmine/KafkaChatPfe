@@ -47,13 +47,11 @@ private boolean canChat(String roleA, String roleB) {
 
 
 
-## ✅ Chat Permission Matrix
+## 🔐 Chat Permission Overview
 
-| Sender Role | Receiver Role | Allowed |
-|-------------|----------------|---------|
-| `ADMIN`     | `SOURCING`     | ✅ Yes  |
-| `MODERATEUR`| `CLIENT`       | ✅ Yes  |
-| `CLIENT`    | `CANDIDAT`     | ✅ Yes  |
-| `CANDIDAT`  | `ADMIN`        | ❌ No   |
-| `ADV`       | `AMBASSADEUR`  | ✅ Yes  |
-| `AUTRE`     | `MODERATEUR`   | ✅ Yes  |
+| Role Group | Can Talk To                  | Chat Type |
+|------------|------------------------------|-----------|
+| Admin      | Group 1 only                 | Private   |
+| Group 1    | Group 1 + Admin + Group 2    | Private   |
+| Group 2    | Group 1 only                 | Private   |
+
