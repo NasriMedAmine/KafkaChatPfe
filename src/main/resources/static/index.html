@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Role-Based Chat</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        select, input, button { margin: 5px; }
+        #chatBox { display: none; margin-top: 20px; }
+        #errorPanel { color: red; display: none; margin-top: 20px; }
+        #chatLog {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            margin-top: 10px;
+        }
+        .message { margin: 5px 0; }
+        .me { color: blue; }
+        .other { color: green; }
+    </style>
+</head>
+<body>
+
+<h2>Choose your user</h2>
+<select id="currentUser"></select>
+<button onclick="connect()">Connect</button>
+
+<h2>Choose user to chat with</h2>
+<select id="targetUser"></select>
+<button onclick="startChat()">Start Chat</button>
+
+<div id="errorPanel">❌ Chat not allowed by role rules</div>
+
+<div id="chatBox">
+    <h3>Chat with <span id="chatWith"></span></h3>
+    <div id="chatLog"></div>
+    <input id="message" placeholder="Type message">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    const users = [
+        { id: 1, username: "amine", role: "ADMIN" },
+        { id: 2, username: "mohamed", role: "MODERATEUR" },
+        { id: 3, username: "ala", role: "MODERATEUR" },
+        { id: 4, username: "aweb", role: "SOURCING" },
+        { id: 5, username: "houssem", role: "SOURCING" },
+        { id: 6, username: "jawher", role: "COMMERCE" },
+        { id: 7, username: "yassine", role: "COMMERCE" },
+        { id: 8, username: "omar", role: "ADV" },
+        { id: 9, username: "ali", role: "ADV" },
+        { id: 10, username: "mahmoud", role: "CLIENT" },
+        { id: 11, username: "rami", role: "CLIENT" },
+        { id: 12, username: "john", role: "CANDIDAT" },
+        { id: 13, username: "armando", role: "CANDIDAT" },
+        { id: 14, username: "ronaldo", role: "AMBASSADEUR" },
+        { id: 15, username: "messi", role: "AMBASSADEUR" },
+        { id: 16, username: "hazard", role: "SOURCING_COMMERCE" },
+        { id: 17, username: "neymar", role: "SOURCING_COMMERCE" }
+    ];
+
+    let socket;
+    let currentUser = "";
+    let targetUser = "";
+
+    const currentUserSelect = document.getElementById("currentUser");
+    const targetUserSelect = document.getElementById("targetUser");
+
+    users.forEach(u => {
+        const option = document.createElement("option");
+        option.value = u.username;
+        option.text = `${u.username} (${u.role})`;
+        currentUserSelect.appendChild(option);
+    });
+
+    function connect() {
+        currentUser = currentUserSelect.value;
+        socket = new WebSocket("ws://localhost:8080/ws/chat?username=" + currentUser);
+
+        socket.onopen = function() {
+            alert("✅ Connected as " + currentUser);
+        };
+
+        socket.onerror = function() {
+            alert("❌ Connection failed for " + currentUser);
+        };
+
+        socket.onmessage = function(event) {
+            const log = document.getElementById("chatLog");
+            const msg = document.createElement("div");
+            msg.className = "message other";
+            msg.innerText = event.data;
+            log.appendChild(msg);
+            log.scrollTop = log.scrollHeight;
+        };
+
+        // Populate target user dropdown
+        targetUserSelect.innerHTML = "";
+        users.filter(u => u.username !== currentUser).forEach(u => {
+            const option = document.createElement("option");
+            option.value = u.username;
+            option.text = `${u.username} (${u.role})`;
+            targetUserSelect.appendChild(option);
+        });
+    }
+
+    function startChat() {
+        targetUser = targetUserSelect.value;
+
+        fetch(`/chat/check?sender=${currentUser}&receiver=${targetUser}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.allowed) {
+                    document.getElementById("chatBox").style.display = "block";
+                    document.getElementById("errorPanel").style.display = "none";
+                    document.getElementById("chatWith").innerText = targetUser;
+                    document.getElementById("chatLog").innerHTML = "";
+                } else {
+                    document.getElementById("chatBox").style.display = "none";
+                    document.getElementById("errorPanel").style.display = "block";
+                }
+            });
+    }
+
+    function sendMessage() {
+        const msgInput = document.getElementById("message");
+        const msg = msgInput.value;
+        if (!msg) return;
+
+        socket.send(currentUser + ":" + targetUser + ":" + msg);
+
+        const log = document.getElementById("chatLog");
+        const myMsg = document.createElement("div");
+        myMsg.className = "message me";
+        myMsg.innerText = currentUser + ": " + msg;
+        log.appendChild(myMsg);
+        log.scrollTop = log.scrollHeight;
+
+        msgInput.value = "";
+    }
+</script>
+
+</body>
+</html>

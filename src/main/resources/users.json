@@ -1,0 +1,19 @@
+[
+  {"id": 1, "username": "amine", "role": "ADMIN"},
+  {"id": 2, "username": "mohamed", "role": "MODERATEUR"},
+  {"id": 3, "username": "ala", "role": "MODERATEUR"},
+  {"id": 4, "username": "aweb", "role": "SOURCING"},
+  {"id": 5, "username": "houssem", "role": "SOURCING"},
+  {"id": 6, "username": "jawher", "role": "COMMERCE"},
+  {"id": 7, "username": "yassine", "role": "COMMERCE"},
+  {"id": 8, "username": "omar", "role": "ADV"},
+  {"id": 9, "username": "ali", "role": "ADV"},
+  {"id": 10, "username": "mahmoud", "role": "CLIENT"},
+  {"id": 11, "username": "rami", "role": "CLIENT"},
+  {"id": 12, "username": "john", "role": "CANDIDAT"},
+  {"id": 13, "username": "armando", "role": "CANDIDAT"},
+  {"id": 14, "username": "ronaldo", "role": "AMBASSADEUR"},
+  {"id": 15, "username": "messi", "role": "AMBASSADEUR"},
+  {"id": 16, "username": "hazard", "role": "SOURCING_COMMERCE"},
+  {"id": 17, "username": "neymar", "role": "SOURCING_COMMERCE"}
+]
